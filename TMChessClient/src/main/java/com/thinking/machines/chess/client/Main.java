@@ -1,4 +1,6 @@
 package com.thinking.machines.chess.client;
+import javax.swing.JOptionPane;
+
 import com.thinking.machines.nframework.client.*;
 public class Main
 {
@@ -7,8 +9,8 @@ public static void main(String args[])
 try
 {
 NFrameworkClient client=new NFrameworkClient();
-String username=args[0];
-String password=args[1];
+String username=JOptionPane.showInputDialog("Enter username : ");
+String password=JOptionPane.showInputDialog("Enter password : ");
 boolean authentic=(Boolean)client.execute("/TMChessServer/authenticateMember",username,password);
 if(authentic)
 {
