@@ -1,1 +1,0 @@
-java -classpath ..\..\nframework\common\build\libs\nframework-common.jar;..\..\nframework\server\build\libs\nframework-server.jar;c:\gson\gson.jar;build\libs\TMChessServer.jar;..\TMChessCommon\build\libs\TMChessCommon.jar;.  --add-opens java.base/java.lang=ALL-UNNAMED  com.thinking.machines.chess.server.Main

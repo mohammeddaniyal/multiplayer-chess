@@ -1,0 +1,3 @@
+package io.github.mohammeddaniyal.chess.common;
+public enum MESSAGE_TYPE
+{CHALLENGE,CHALLENGE_ACCEPTED,CHALLENGE_REJECTED,NOT_AVAILABLE,CHALLENGE_IGNORED}

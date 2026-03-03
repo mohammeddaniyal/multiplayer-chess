@@ -1,1 +1,0 @@
-java -jar build\libs\TMChess-Client.jar
