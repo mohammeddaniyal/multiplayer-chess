@@ -1,1 +1,0 @@
-java -classpath ..\..\nframework\client\build\libs\nframework-client.jar;..\..\nframework\common\build\libs\nframework-common.jar;build\libs\ChessClient.jar;c:\gson\gson.jar;..\ChessCommon\build\libs\ChessCommon.jar;.  --add-opens java.base/java.lang=ALL-UNNAMED io.github.mohammeddaniyal.chess.client.Main %1 %2

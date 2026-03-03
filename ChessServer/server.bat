@@ -1,1 +1,0 @@
-java -jar build\libs\Chess-Server.jar
