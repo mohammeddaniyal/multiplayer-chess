@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+    flatDir {
+        dirs 'libs' // This allows local JARs
+    }
+}
+
+dependencies {
+    implementation name: 'gson' // Use local GSON JAR
+implementation files(
+	'../../nframework/client/build/libs/nframework-client.jar',
+	'../../nframework/common/build/libs/nframework-common.jar',
+	'../ChessCommon/build/libs/ChessCommon.jar'
+)
+}
+
+shadowJar {
+    archiveBaseName.set("Chess-Client")
+    archiveClassifier.set('')
+
+    mergeServiceFiles() // Ensure all service files are included
+
+    manifest {
+        attributes(
+	'Main-Class': 'io.github.mohammeddaniyal.chess.client.Main',
+	'Add-Opens': 'java.base/java.lang=ALL-UNNAMED'        
+    )
+    }
+
+}
+
+
