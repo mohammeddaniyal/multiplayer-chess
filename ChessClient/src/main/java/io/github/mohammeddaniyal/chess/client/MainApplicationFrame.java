@@ -50,7 +50,7 @@ public class MainApplicationFrame extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
-        client = new NFrameworkClient();
+        client = NetworkUtil.getClient();
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
 
