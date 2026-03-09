@@ -1,111 +1,216 @@
+# Multiplayer Chess
 
-# TMChess - Multiplayer Chess Game  
+A real-time multiplayer chess system built in **Java** using a custom **TCP networking framework** and a **server-authoritative architecture**.
 
-TMChess is a multiplayer chess game built with Java, featuring real-time gameplay, move validation, history tracking, and a well-designed GUI. It supports early checkmate detection, check validation, castling, and color-highlighted move indicators.  
-
----
-
-## 🛠 Features  
-- **Multiplayer Chess:** Play against another player in real time.  
-- **Move Validation:** Ensures only legal moves are allowed.  
-- **Check & Checkmate Detection:** Alerts players when the king is in check or checkmate.  
-- **Castling Fixes:** Fixed UI and logic bugs for castling.  
-- **Highlighted Moves:**
-  - **Green** → Possible moves  
-  - **Red** → Capture moves  
-  - **Golden Yellow** → Castling moves  
-- **Move History Table:** Tracks all moves made during the game.  
-- **Flipped Board for Black Player:** Adjusts the board view for each player.  
-- **Server-Client Architecture:** Runs on a dedicated server for seamless play.  
-- **Member & Inbox Tables:** Manage active players and game invites.  
+The server manages game sessions and validates all chess rules, while the desktop client renders the UI using **Java Swing**. The project demonstrates low-level networking, concurrent session management, and real-time game synchronization without relying on web frameworks.
 
 ---
 
-## 📷 Screenshots  
+## Demo
 
-| Feature | Screenshot |
-|---------|------------|
-| **Server Running** | ![Server Running](screenshots/Server_running_in_cmd.png) |
-| **Client Execution Command** | ![Client Execution](screenshots/Executing_client.png) |
-| **Startup Window** | ![Startup Window](screenshots/Initial_window.png) |
-| **Game Starting Panel (Countdown)** | ![Game Panel](screenshots/game_starting.png) |
-| **Member & Inbox Table (With Player Status)** | ![Inbox Table](screenshots/member_inboxes.png) |
-| **Flipped Board for Black** | ![Flipped Board](screenshots/board_flipped_for_black_player.png) |
-| **Highlighted Moves (Green for valid tiles and Red for capture)** | ![Highlight Moves](screenshots/queen_moves.png) |
-| **Highlighted Moves (Special Move King Castling)** | ![Highlight Moves](screenshots/king_castling_hightlight.png) |
-| **Move History Table** | ![Move History](screenshots/move_history_table.png) |
-| **White Won** | ![White Won](screenshots/white_won.png) |
-| **Black Lost** | ![Black Lost](screenshots/black_lost.png) |
+*(Add a short demo video here once i recorded)*
 
 ---
 
-## 🚀 Installation & Setup  
+## Screenshots
 
-### 1️⃣ **Download the Release**  
-Get the latest release from [TMChess Releases](https://github.com/Mohammeddaniyal/TMChess/releases/tag/v1.2).  
+### Login
 
-### 2️⃣ **Run the Server**  
-Before starting the game, launch the server:  
-```sh
-java -jar build/libs/TMChess-Server.jar
+![Login](screenshots/v2/login.png)
+
+### Lobby Dashboard
+
+![Lobby](screenshots/v2/lobby.png)
+
+### Chess Board
+
+![Board](screenshots/v2/board.png)
+
+### Gameplay
+
+![Gameplay](screenshots/v2/gameplay.png)
+
+---
+
+## Features
+
+* Real-time multiplayer gameplay over **TCP sockets**
+* **Server-authoritative chess engine** (all rules validated server-side)
+* Player lobby with invitation system
+* Move history tracking
+* Highlighted valid moves and captures
+* Dark-themed Swing user interface
+* Custom RPC-style networking framework
+
+---
+
+## Architecture
+
+The application follows a **multi-tier client–server architecture**.
+
+```mermaid
+flowchart LR
+    Client[Chess Client<br>Swing UI]
+    Network[NFramework<br>TCP RPC]
+    Server[Chess Server<br>Game Engine]
+
+    Client -->|Player Actions| Network
+    Network -->|Request Dispatch| Server
+    Server -->|Game State Updates| Network
+    Network --> Client
 ```
 
-### 3️⃣ **Run the Client**  
-Each player should run the client with the their username and password:  
-```sh
-java -jar build/libs/TMChess-Client.jar <username> <password>
+### Responsibilities
+
+**Client**
+
+* User interface
+* Rendering board state
+* Sending player actions
+
+**Server**
+
+* Game rule validation
+* Session management
+* Player status tracking
+* Move synchronization
+
+Communication between client and server is handled through a **custom TCP networking framework**.
+
+---
+
+## Networking Layer
+
+The project uses a custom networking framework called **NFramework**.
+
+NFramework provides:
+
+* TCP connection management
+* request routing
+* serialization
+* asynchronous request handling
+
+Repository:
+[https://github.com/mohammeddaniyal/nframework](https://github.com/mohammeddaniyal/nframework)
+
+This framework allows the client to invoke server-side handlers in an **RPC-style manner** rather than using REST APIs.
+
+---
+
+## Project Structure
+
+```
+multiplayer-chess
+ ├── ChessClient
+ │     Swing-based desktop application
+ │
+ ├── ChessServer
+ │     Multiplayer game engine and session manager
+ │
+ ├── ChessCommon
+ │     Shared DTOs and network message contracts
+ │
+ └── screenshots
+       UI screenshots used in documentation
 ```
 
-Example:  
-```sh
-java -jar build/libs/TMChess-Client.jar Daniyal daniyal
+---
+
+## Requirements
+
+Java **21**
+
+---
+
+## Configuration
+
+The application supports optional configuration using `server.properties`.
+
+### Client configuration
+
+Create a file named:
+
+```
+server.properties
 ```
 
-### 4️⃣ **Start Playing!**  
-- Create a match and invite an opponent.  
-- Make legal moves while avoiding self-check.  
-- Capture, check, or checkmate your opponent!  
+inside the `ChessClient` directory.
+
+Example:
+
+```
+HOST=127.0.0.1
+PORT=5500
+```
 
 ---
 
-## 📝 Changelog  
+### Server configuration
 
-### **v1.2** - UI Enhancements & Improved Player Turn Indication  
-✅ **Player Turn Highlighting:** All pieces of the current player are now highlighted with a **Cyan border** to indicate their turn.  
-✅ **Smooth UI Updates:** Borders reset correctly when a piece is selected, ensuring a clear and responsive interface.  
-✅ **Improved Game Flow:** Enhanced visibility for active pieces, making it easier to plan moves.  
-✅ **Minor UI Fixes & Refinements:** Optimized rendering for a more polished experience.  
+Create `server.properties` inside the `ChessServer` directory:
 
-### **v1.1** - Latest Update  
-✅ Fixed **King Castling Bug** (caused by a single line of code, took an hour to find in the wrong file 😆).  
-✅ Updated **GUI Highlights** (Green for moves, Red for captures, Golden Yellow for castling).  
-✅ **Move History Table** implemented for tracking all game moves.  
-✅ Various **bug fixes & UI improvements**.  
+```
+PORT=5500
+```
 
-### **v1.0** - Initial Release  
-- Core **multiplayer chess** functionality.  
-- Basic **move validation** and piece movement.  
-- Early checkmate detection.  
+If the configuration file is not present, default values will be used.
 
 ---
 
-## 📌 Future Improvements  
-- Add support for en passant and stalemate detection.  
-- Improve **AI-based move suggestions**.  
-- Implement **time controls** for competitive play.  
-- Mobile & Web versions (in the future 🚀).  
+## Running the Application
+
+### Start the Server
+
+```
+java -jar chess-server.jar
+```
 
 ---
 
-## 🤝 Contributing  
-Want to contribute? Fork the repo and submit a pull request!  
+### Start the Client
+
+```
+java -jar chess-client.jar
+```
+
+Run **two client instances** to simulate multiplayer gameplay.
 
 ---
 
-## 📧 Contact  
-For issues or feature requests, reach out at **mohammeddaniyal453@gmail.com**.  
-GitHub: [Mohammeddaniyal](https://github.com/Mohammeddaniyal)  
+## Download
+
+Pre-built binaries are available in the **Releases** section.
+
+Assets include:
+
+* `chess-server.jar`
+* `chess-client.jar`
 
 ---
 
-♟️ **Enjoy Playing TMChess!** 🏆  
+## Technologies Used
+
+* Java
+* Java Swing
+* TCP sockets
+* Gradle
+* JSON (GSON)
+
+---
+
+## Future Improvements
+
+Potential enhancements:
+
+* Spectator mode
+* Match history persistence
+* Ranking system
+* Web-based client
+
+---
+
+## Author
+
+Mohammed Daniyal
+
+---
