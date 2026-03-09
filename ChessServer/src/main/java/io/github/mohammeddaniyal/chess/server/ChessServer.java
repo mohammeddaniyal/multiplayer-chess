@@ -360,6 +360,16 @@ public class ChessServer {
         Game game = games.get(gameId);
         if (game == null)
             return -1;
+            
+        // --- THE FIX: Ignore disconnects if the game has already ended naturally ---
+        if (game.isStalemate == 1) {
+            return 0; 
+        }
+        if (game.moves.size() > 0 && game.moves.get(game.moves.size() - 1).isLastMove == 1) {
+            return 0; 
+        }
+        // ---------------------------------------------------------------------------
+
         String opponentPlayer = (game.player1.equals(username)) ? game.player2 : game.player1;
         // search the opponent is he still in the playingMembers set or not
         // if yes then he doesn't left the game and otherwise he left
