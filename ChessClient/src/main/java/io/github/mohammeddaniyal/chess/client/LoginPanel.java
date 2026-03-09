@@ -25,7 +25,7 @@ public class LoginPanel extends JPanel {
         loginBox.setBackground(PANEL_BG);
         loginBox.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40)); 
 
-        JLabel titleLabel = new JLabel("TM Chess Engine");
+        JLabel titleLabel = new JLabel("Chess Engine");
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
         titleLabel.setForeground(TEXT_COLOR);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
