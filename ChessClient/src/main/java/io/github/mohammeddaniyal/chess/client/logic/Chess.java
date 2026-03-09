@@ -203,14 +203,7 @@ public class Chess extends JPanel implements ActionListener {
             try {
                 byte left = (byte) client.execute("/ChessServer/isOpponentLeftTheGame", gameInit.gameId, username);
                 if (left == 1) {
-                    ((Timer) ev.getSource()).stop();
-                    client.execute("/ChessServer/leftGame", username);
-                    
-                    // return to lobby before showing alert to prevent desync
-                    SwingUtilities.invokeLater(() -> {
-                        mainApplicationFrame.returnToLobbyFromGame();
-                        NotificationDialog.showMessage(mainApplicationFrame, "Game Over", "Opponent left the game. You Won!");
-                    });
+                    handleGameOver("Game Over", "Opponent left the game. You Won!");
                 }
             } catch (Throwable t) { System.err.println("Network blip during polling. Retrying..."); }
         });
@@ -243,11 +236,7 @@ public class Chess extends JPanel implements ActionListener {
                 }
 
                 if (move.isLastMove == 1) {
-                    isOpponentLeftTheGameTimer.stop();
-                    SwingUtilities.invokeLater(() -> {
-                        mainApplicationFrame.returnToLobbyFromGame();
-                        NotificationDialog.showMessage(mainApplicationFrame, "Game Over", "You Lost!");
-                    });
+                    handleGameOver("Game Over", "You Lost!");
                     return;
                 }
 
@@ -260,11 +249,7 @@ public class Chess extends JPanel implements ActionListener {
 
                 byte stalemate = (byte) client.execute("/ChessServer/isStalemate", gameInit.gameId, gameInit.playerColor);
                 if (stalemate == 1) {
-                    isOpponentLeftTheGameTimer.stop();
-                    SwingUtilities.invokeLater(() -> {
-                        mainApplicationFrame.returnToLobbyFromGame();
-                        NotificationDialog.showMessage(mainApplicationFrame, "Stalemate. The game is a draw", "Game Over");
-                    });
+                    handleGameOver("Game Over", "Stalemate. The game is a draw");
                 }
             } catch (Throwable t) { System.err.println("Network blip during polling. Retrying..."); }
         });
@@ -362,21 +347,13 @@ public class Chess extends JPanel implements ActionListener {
                 }
 
                 if (move.isLastMove == 1) {
-                    isOpponentLeftTheGameTimer.stop();
-                    SwingUtilities.invokeLater(() -> {
-                        mainApplicationFrame.returnToLobbyFromGame();
-                        NotificationDialog.showMessage(mainApplicationFrame, "Game Over", "You Won!");
-                    });
+                    handleGameOver("Game Over", "You Won!");
                     return;
                 }
 
                 byte stalemate = (byte) client.execute("/ChessServer/stalemateOccur", gameInit.gameId);
                 if (stalemate == 1) {
-                    isOpponentLeftTheGameTimer.stop();
-                    SwingUtilities.invokeLater(() -> {
-                        mainApplicationFrame.returnToLobbyFromGame();
-                        NotificationDialog.showMessage(mainApplicationFrame, "Stalemate. The game is a draw", "Game Over");
-                    });
+                    handleGameOver("Game Over", "Stalemate. The game is a draw");
                     return;
                 }
 
@@ -445,7 +422,6 @@ public class Chess extends JPanel implements ActionListener {
                 if (getOpponentMoveTimer != null) getOpponentMoveTimer.stop();
                 if (isOpponentLeftTheGameTimer != null) isOpponentLeftTheGameTimer.stop();
                 client.execute("/ChessServer/leftGame", username);
-                SwingUtilities.invokeLater(() -> mainApplicationFrame.returnToLobbyFromGame());
             } catch (Throwable t) {
                 System.err.println("Server unreachable during resign, forcing local exit.");
             } finally {
@@ -529,5 +505,29 @@ public class Chess extends JPanel implements ActionListener {
         String pgnMove = PGNConvertor.convertMoveToPGN(move, isCapture);
         if (move.player == 0) moveHistoryPanel.addBlackMove(pgnMove);
         else moveHistoryPanel.addWhiteMove(pgnMove);
+    }
+    
+    private void handleGameOver(String title, String message) {
+        // 1. Stop all polling timers
+        if (isOpponentLeftTheGameTimer != null) isOpponentLeftTheGameTimer.stop();
+        if (getOpponentMoveTimer != null) getOpponentMoveTimer.stop();
+        
+        canIPlay = false; // Lock the board
+        resetSelection();
+
+        // 2. TELL THE SERVER WE ARE LEAVING THE GAME
+        try {
+            client.execute("/ChessServer/leftGame", username);
+        } catch (Throwable t) {
+            System.err.println("Failed to notify server of game end: " + t.getMessage());
+        }
+
+        SwingUtilities.invokeLater(() -> {
+            // 3. Show the message FIRST (pauses execution)
+            NotificationDialog.showMessage(mainApplicationFrame, title, message);
+            
+            // 4. Return to lobby ONLY AFTER they close the dialog
+            mainApplicationFrame.returnToLobbyFromGame();
+        });
     }
 }
