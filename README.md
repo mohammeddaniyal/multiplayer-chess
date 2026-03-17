@@ -8,7 +8,9 @@ The server manages game sessions and validates all chess rules, while the deskto
 
 ## Demo
 
-*(Add a short demo video here once i recorded)*
+![Multiplayer Chess Demo](screenshots/demo.gif)
+
+▶️ Full Demo Video: https://youtu.be/IP1Bd53NQp0
 
 ---
 
