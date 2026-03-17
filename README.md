@@ -8,7 +8,9 @@ The server manages game sessions and validates all chess rules, while the deskto
 
 ## Demo
 
-![Multiplayer Chess Demo](screenshots/demo.gif)
+<p align="center">
+  <img src="screenshots/demo.gif" width="650"/>
+</p>
 
 ▶️ Full Demo Video: https://youtu.be/IP1Bd53NQp0
 
@@ -16,21 +18,29 @@ The server manages game sessions and validates all chess rules, while the deskto
 
 ## Screenshots
 
-### Login
+### Login & Lobby
 
-![Login](screenshots/v2/login.png)
-
-### Lobby Dashboard
-
-![Lobby](screenshots/v2/lobby.png)
-
-### Chess Board
-
-![Board](screenshots/v2/board.png)
+<p align="center">
+  <a href="screenshots/v2/login.png">
+    <img src="screenshots/v2/login.png" width="45%"/>
+  </a>
+   &nbsp;&nbsp;
+  <a href="screenshots/v2/lobby.png">
+    <img src="screenshots/v2/lobby.png" width="45%"/>
+  </a>
+</p>
 
 ### Gameplay
 
-![Gameplay](screenshots/v2/gameplay.png)
+<p align="center">
+  <a href="screenshots/v2/board.png">
+    <img src="screenshots/v2/board.png" width="45%"/>
+  </a>
+   &nbsp;&nbsp;
+  <a href="screenshots/v2/gameplay.png">
+    <img src="screenshots/v2/gameplay.png" width="45%"/>
+  </a>
+</p>
 
 ---
 
